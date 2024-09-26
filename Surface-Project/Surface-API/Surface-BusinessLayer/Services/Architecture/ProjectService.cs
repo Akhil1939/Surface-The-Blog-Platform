@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Surface.BusinessAccessLayer.Services.Architecture;
 using Surface.DataAccessLayer.Repositories.Infrastructure;
@@ -22,7 +21,7 @@ namespace Surface_BusinessLayer.Services.Architecture
             _httpContextAccessor = httpContextAccessor;
 
         }
-        public async Task Add(AddProjectDTO dto)
+        public async Task<long> Add(AddProjectDTO dto)
         {
             Project createProject = new()
             {
@@ -35,8 +34,6 @@ namespace Surface_BusinessLayer.Services.Architecture
                 StatusId = 1,
                 CreatedBy = 1,
                 ModifiedBy = 1,
-
-                
             };
             if (dto.Teams.Any())
             {
@@ -55,6 +52,7 @@ namespace Surface_BusinessLayer.Services.Architecture
                 createProject.Teams = teams;
             }
             await AddAsync(createProject);
+            return createProject.Id;
         }
         public async Task<Project> GetById(long id)
         {
@@ -66,11 +64,10 @@ namespace Surface_BusinessLayer.Services.Architecture
 
         }
 
-        public Task UpdateProjectStatus()
+        public async Task UpdateProjectStatus(long projectId, byte statusId)
         {
-            throw new NotImplementedException();
+            await UpdateProjectStatus(projectId, statusId);
         }
-
 
 
 
